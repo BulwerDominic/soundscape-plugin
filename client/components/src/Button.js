@@ -62,7 +62,7 @@ customElements.define(
             font-size: var(--font-size);
             font-family: var(--font-family);
             cursor: pointer;
-            padding: 10px 20px;
+            height: 100%;
             transition: all 0.3s ease;
             border-radius: 1px;
           }

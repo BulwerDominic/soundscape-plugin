@@ -1,5 +1,5 @@
 #prompt {
-    width: 100%;
+    width: 200px;
     height: 50px;
 }
 
@@ -13,6 +13,7 @@ input, textarea {
     border-radius: 5px;
     font-size: 16px;
     transition: all 0.3s ease;
+	margin-top: 8px;
 
     &:focus {
         outline: none;
@@ -26,10 +27,10 @@ input, textarea {
 
 .input-box {
 	display: flex;
+	width: 100%;
 	flex-direction: column;
 	align-items: start;
 	justify-content: center;
-	gap: 10px;
 }
 
 
@@ -37,7 +38,7 @@ input, textarea {
     display: flex;
     justify-content: center;
     align-items: start;
-    gap: 40px;
+    gap: 10px;
 }
 
 #continue {

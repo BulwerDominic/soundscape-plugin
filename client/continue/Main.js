@@ -114,7 +114,7 @@ A series of intense and ear-piercing cowbell sounds.</textarea>
                   style="width: 100px;"
                 />
                 </div>
-                <div class="plugin-panel__generate" style="margin-top: 22px;">
+                <div class="plugin-panel__generate" style="margin-top: 20px;">
                   <magenta-output-text></magenta-output-text>
                   <magenta-button
                     disabled
