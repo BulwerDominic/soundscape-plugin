@@ -64,7 +64,7 @@ customElements.define(
             cursor: pointer;
             padding: 10px 20px;
             transition: all 0.3s ease;
-            border-radius: 5px;
+            border-radius: 1px;
           }
 
           :host([nofill]) button {

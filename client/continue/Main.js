@@ -97,20 +97,32 @@ export function Continue(parentElement) {
         <div id="title">Soundscape</div>
         <div class="plugin-content">
           <div id="controls">
-            <div class="plugin-panel">
-              <textarea id="prompt" @change=${validate} rows="2" cols="50">
-A series of intense and ear-piercing cowbell sounds.
-          </textarea
-              >
-            </div>
-            <div class="plugin-panel__generate">
-              <magenta-output-text></magenta-output-text>
-              <magenta-button
-                disabled
-                id="generate"
-                label="Initializing..."
-                @click=${generate}
-              ></magenta-button>
+              <div class="input-box">
+                <label for="prompt" style="color: #f5f5f5;">Prompt:</label>
+                <textarea id="prompt" @change=${validate} rows="2" cols="50">
+A series of intense and ear-piercing cowbell sounds.</textarea>
+              </div>
+              <div class="input-box">
+                <label for="bars" style="color: #f5f5f5; width: 100px;"
+                  >Number of Bars:</label
+                >
+                <input
+                  type="number"
+                  id="bars"
+                  min="1"
+                  value="1"
+                  style="width: 100px;"
+                />
+                </div>
+                <div class="plugin-panel__generate" style="margin-top: 22px;">
+                  <magenta-output-text></magenta-output-text>
+                  <magenta-button
+                    disabled
+                    id="generate"
+                    label="Initializing..."
+                    @click=${generate}
+                  ></magenta-button>
+                </div>
             </div>
           </div>
         </div>
