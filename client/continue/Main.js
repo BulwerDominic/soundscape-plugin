@@ -62,11 +62,38 @@ async function generate() {
       },
       body: JSON.stringify(data),
     });
+
+    const name_prompt =
+      "Please generate a name for a music file generated with the following prompt: " +
+      prompt;
+
+    const name_response = await fetch(
+      "https://api.openai.com/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization:
+            "Bearer " + "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",
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [{ role: "user", content: name_prompt }],
+          temperature: 0.7,
+        }),
+      }
+    );
+
+    const nameData = await name_response.json();
+    console.log(nameData);
+
+    const file_name = nameData.choices[0].message.content + ".wav";
+
     const blob = await response.blob();
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", "output.wav");
+    link.setAttribute("download", file_name);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
