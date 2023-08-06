@@ -94,7 +94,7 @@ export function Continue(parentElement) {
   render(
     html`
       <div id="continue">
-        <div id="title">Soundscape</div>
+        <div id="title">AbleGen</div>
         <div class="plugin-content">
           <div id="controls">
               <div class="input-box">
