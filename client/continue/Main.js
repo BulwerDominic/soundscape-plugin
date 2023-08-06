@@ -54,18 +54,10 @@ async function generate() {
       );
     }
 
-    // Proceed to generate
-    const response = await fetch("http://127.0.0.1:8000/generate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
-
     const name_prompt =
       "Please generate a name for a music file generated with the following prompt: " +
-      prompt;
+      prompt +
+      ". DO NOT include the file extension. For example, give the result lovely_trumpets not lovely_trumpets.wav.";
 
     const name_response = await fetch(
       "https://api.openai.com/v1/chat/completions",
@@ -74,7 +66,7 @@ async function generate() {
         headers: {
           "Content-Type": "application/json",
           Authorization:
-            "Bearer " + "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",
+            "Bearer " + "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",
         },
         body: JSON.stringify({
           model: "gpt-3.5-turbo",
@@ -89,14 +81,18 @@ async function generate() {
 
     const file_name = nameData.choices[0].message.content + ".wav";
 
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", file_name);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    console.log(file_name);
+
+    data.file_name = file_name;
+
+    // Proceed to generate
+    const response = await fetch("http://127.0.0.1:8000/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
   } catch (e) {
     const snackbar = document.createElement("magenta-snackbar");
     snackbar.setAttribute("message", e);
