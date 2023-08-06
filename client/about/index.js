@@ -1,29 +1,45 @@
-import { render, html } from 'lit'
-import './style.scss'
+import { render, html } from "lit";
+import "./style.scss";
 
 // This function sends an HTTP request to the server to open
 // https://magenta.tensorflow.org/studio/ in the default browser.
 // In CEF, you can't open links in the default browser, but it is
 // possible to do this in Max.
 function handleOpenWebsite(e) {
-  e.preventDefault()
-  fetch(e.target.href)
+  e.preventDefault();
+  fetch(e.target.href);
 }
 
 export function About(parentElement) {
-  render(html`
-    <div class="about">
-      <h2 id="title">Magenta Studio</h2>
-      <center><p>Version: ${VERSION}</p></center>
-      <p>
-      Magenta Studio is a MIDI plugin for Ableton Live built on Magenta’s open source tools and models.
-      It uses cutting-edge machine learning techniques for music generation.
-      </p>
-      <p>
-        Find more information and tutorials at
-        <a target="_blank" href="/studio" @click=${handleOpenWebsite}>our website.</a>
-      </p>
-      <!--
+  render(
+    html`
+      <div class="about" style="overflow:scroll">
+        <h2 id="title">A Foresaken Garden</h2>
+        <p>I enter the court</p>
+
+        <p>Through the middle gate—</p>
+
+        <p>And my sleeve is wet with tears.</p>
+
+        <p>The flowers still grow</p>
+
+        <p>In the courtyard,</p>
+
+        <p>Though two springs have fled</p>
+
+        <p>Since last their master came.</p>
+
+        <p>The windows, porch, and bamboo screen</p>
+
+        <p>Are just as they always were,</p>
+
+        <p>But at the entrance to the house</p>
+
+        <p>Someone is missing—</p>
+
+        <p>You!</p>
+        <p>Po Chu-I</p>
+        <!--
       <p>
         <h3>License</h3>
         Copyright 2019 Google Inc.
@@ -36,5 +52,8 @@ export function About(parentElement) {
       </p>
     </div>
     -->
-  `, parentElement)
+      </div>
+    `,
+    parentElement
+  );
 }

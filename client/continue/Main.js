@@ -17,105 +17,105 @@
 
 // import '../../components/theme.scss'
 // import './main.scss'
-import { render, html } from 'lit'
-import { Model } from './Model'
-import './style.scss'
+import { render, html } from "lit";
+import { Model } from "./Model";
+import "./style.scss";
 
 const models = {
-	drums : new Model(true),
-	melody : new Model(false),
+  drums: new Model(true),
+  melody: new Model(false),
+};
+
+async function generate() {
+  if (!validate()) {
+    return;
+  }
+  setStatus("Generating...");
+  //get all the attributes
+  const mode = document.querySelector("#mode").value;
+  const length = document.querySelector("#length").value;
+  const temp = document.querySelector("#temperature").value;
+  const variations = document.querySelector("#variations").value;
+  try {
+    const inputMidi = await document.querySelector("magenta-midi-file").read();
+    const output = await models[mode].predict(
+      inputMidi,
+      length * 16,
+      temp,
+      variations
+    );
+    await document.querySelector("magenta-midi-file").write(output, "CONTINUE");
+  } catch (e) {
+    const snackbar = document.createElement("magenta-snackbar");
+    snackbar.setAttribute("message", e);
+    snackbar.setAttribute("whoops", "");
+    snackbar.setAttribute("error", "");
+    document.body.appendChild(snackbar);
+    setStatus("");
+    throw e;
+  }
+  setStatus("");
 }
 
-async function generate(){
-
-	if (!validate()){
-		return
-	}
-	setStatus('Generating...')
-	//get all the attributes
-	const mode = document.querySelector('#mode').value
-	const length = document.querySelector('#length').value
-	const temp = document.querySelector('#temperature').value
-	const variations = document.querySelector('#variations').value
-	try {
-		const inputMidi = await document.querySelector('magenta-midi-file').read()
-		const output = await models[mode].predict(inputMidi, length * 16, temp, variations)
-		await document.querySelector('magenta-midi-file').write(output, 'CONTINUE')
-	} catch (e){
-		const snackbar = document.createElement('magenta-snackbar')
-		snackbar.setAttribute('message', e)
-		snackbar.setAttribute('whoops', '')
-		snackbar.setAttribute('error', '')			
-		document.body.appendChild(snackbar)
-		setStatus('')
-		throw e
-	}
-	setStatus('')
+function validate() {
+  if (controls.classList.contains("generating")) {
+    return false;
+  }
+  const promptValue = document.querySelector("#prompt").value.trim();
+  const valid = promptValue.length > 0; // Checking if the textarea has content
+  const button = document.querySelector("#generate");
+  if (valid) {
+    button.removeAttribute("disabled");
+  } else {
+    button.setAttribute("disabled", "");
+  }
+  return valid;
 }
 
-function validate(){
-	if (controls.classList.contains('generating')){
-		return false
-	}
-	const valid = document.querySelector('magenta-midi-file').valid
-	const button = document.querySelector('#generate')
-	if (valid){
-		button.removeAttribute('disabled')
-	} else {
-		button.setAttribute('disabled', '')
-	}
-	return valid
+function setStatus(status, error = false) {
+  const element = document.querySelector("magenta-button");
+  const controls = document.querySelector("#controls");
+  if (status === "") {
+    element.setAttribute("label", "Generate");
+    controls.classList.remove("generating");
+  } else {
+    element.setAttribute("label", status);
+    controls.classList.add("generating");
+  }
 }
 
-function setStatus(status, error=false){
-	const element = document.querySelector('magenta-button')
-	const controls = document.querySelector('#controls')
-	if (status === ''){
-		element.setAttribute('label', 'Generate')
-		controls.classList.remove('generating')
-	} else {
-		element.setAttribute('label', status)
-		controls.classList.add('generating')
-	}
-}
+export function Continue(parentElement) {
+  const initialized = Promise.all([models.drums.load(), models.melody.load()]);
+  initialized.then(() => {
+    setStatus("");
+    validate();
+  });
 
-export function Continue(parentElement){
-	const initialized = Promise.all([models.drums.load(), models.melody.load()])
-	initialized.then(() => {
-		setStatus('')
-		validate()
-	})
-	
-	render(html`
-		<div id="continue">
-			<div id="title" class="${ANIMATE ? 'animate' : ''}">
-				CONTINU<span>E</span>
-			</div>
-			<div class="plugin-content">
-				<div id="controls">
-					<div class="plugin-panel__type">
-						<magenta-radio-group
-							label="Type"
-							values=${JSON.stringify(['drums', 'melody'])}
-							id="mode">
-					</div>
-					<div class="plugin-panel">
-						</magenta-radio-group>
-						<magenta-midi-file 
-							label="Input Clip"
-							@change=${validate}></magenta-midi-file>
-					</div>
-					<div class="plugin-panel__generate">
-						<magenta-output-text></magenta-output-text>
-						<magenta-button disabled id="generate" label="Initializing..." @click=${generate}></magenta-button>
-					</div>
-					<div class="plugin-panel">
-						<magenta-slider id="variations" value="4" min="1" max="8" label="Variations"></magenta-slider>
-						<magenta-slider id="length" value="2" min="1" max="32" label="Length" units="Bars"></magenta-slider>
-						<magenta-slider id="temperature" value="1" min="0" max="2" step="0.1" label="Temperature"></magenta-slider>
-					</div>
-				</div>
-			</div>
-		</div>
-	`, parentElement)
+  render(
+    html`
+      <div id="continue">
+        <div id="title">Soundscape</div>
+        <div class="plugin-content">
+          <div id="controls">
+            <div class="plugin-panel">
+              <textarea id="prompt" @change=${validate} rows="2" cols="50">
+A series of intense and ear-piercing cowbell sounds.
+          </textarea
+              >
+            </div>
+            <div class="plugin-panel__generate">
+              <magenta-output-text></magenta-output-text>
+              <magenta-button
+                disabled
+                id="generate"
+                label="Initializing..."
+                @click=${generate}
+              ></magenta-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `,
+    parentElement
+  );
 }

@@ -15,79 +15,84 @@
  * limitations under the License.
  */
 
-import { LitElement, html } from 'lit'
-import { commonStyle } from './InputStyle'
+import { LitElement, html } from "lit";
+import { commonStyle } from "./InputStyle";
 
-customElements.define('magenta-button', class MagentaButton extends LitElement {
+customElements.define(
+  "magenta-button",
+  class MagentaButton extends LitElement {
+    static get properties() {
+      return {
+        label: { type: String },
+        disabled: { type: Boolean },
+      };
+    }
 
-	static get properties(){
-		return {
-			label : { type : String },
-			disabled : { type : Boolean },
-		}
-	}
+    constructor() {
+      super();
+    }
 
-	constructor(){
-		super()
-	}
+    focus() {
+      super.focus();
+      this.shadowRoot.querySelector("button").focus();
+    }
 
-	focus(){
-		super.focus()
-		this.shadowRoot.querySelector('button').focus()
-	}
+    render() {
+      return html`
+        ${commonStyle}
+        <style>
+          :host {
+            --component-height: var(--small-component-height);
+            width: 100%;
+          }
 
-	render(){
-		return html`
-			${commonStyle}
-			<style>
+          :host([disabled]) {
+            pointer-events: none;
+          }
 
-				:host {
-					--component-height: var(--small-component-height);
-					width: 100%;
-				}
+          button {
+            border-color: #444;
+            --shadow-color: #444;
+            height: var(--component-height);
+            color: #f5f5f5;
+            -webkit-appearance: none;
+            outline: none;
+            background-color: #282828;
+            width: 100%;
+            font-size: var(--font-size);
+            font-family: var(--font-family);
+            cursor: pointer;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+            border-radius: 5px;
+          }
 
-				:host([disabled]){
-					pointer-events: none;
-				}
-				
-				button {
-					border-color: var(--accent-color);
-					--shadow-color: var(--accent-color);
-					height: var(--component-height);
-					color: white;
-					-webkit-appearance: none;
-					outline: none;
-					background-color: var(--accent-color);
-					width: 100%;
-					font-size: var(--font-size);
-					font-family: var(--font-family);
-					cursor: pointer;
-				}
+          :host([nofill]) button {
+            background-color: var(--background-color);
+          }
 
-				:host([nofill]) button {
-					background-color: var(--background-color);
-				}
+          button:active {
+            color: #282828;
+            background-color: #f5f5f5;
+            border-color: #f5f5f5;
+          }
 
-				button:active {
-					color: var(--accent-color);
-					background-color: white;
-					border-color: white;
-				}
+          button:hover,
+          button:focus {
+            // transform: scale(1.05);
+            background-color: #444;
+          }
 
-				button:hover, button:focus {
-					// transform: scale(1.05);
-				}
+          button[disabled] {
+            background-color: #444;
+            border-color: #444;
+            opacity: 0.6;
+            pointer-events: none;
+          }
+        </style>
 
-				button[disabled]{
-					background-color: var(--color-gray);
-					border-color: var(--color-gray);
-					pointer-events: none;
-				}
-
-			</style>
-			<button 
-				outlined
-				?disabled=${this.disabled}>${this.label}</button>
-		`
-	}
-})
+        <button outlined ?disabled=${this.disabled}>${this.label}</button>
+      `;
+    }
+  }
+);
