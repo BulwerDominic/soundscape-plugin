@@ -31,20 +31,45 @@ async function generate() {
     return;
   }
   setStatus("Generating...");
+
   //get all the attributes
-  const mode = document.querySelector("#mode").value;
-  const length = document.querySelector("#length").value;
-  const temp = document.querySelector("#temperature").value;
-  const variations = document.querySelector("#variations").value;
+  const prompt = document.querySelector("#prompt").value;
+  const bars = document.querySelector("#bars").value;
+
+  const data = {
+    prompt: prompt,
+    bars: bars,
+  };
+
   try {
-    const inputMidi = await document.querySelector("magenta-midi-file").read();
-    const output = await models[mode].predict(
-      inputMidi,
-      length * 16,
-      temp,
-      variations
-    );
-    await document.querySelector("magenta-midi-file").write(output, "CONTINUE");
+    // Initial check
+    const checkResponse = await fetch("http://127.0.0.1:8000/");
+    if (checkResponse.status !== 200) {
+      throw new Error(`Server check failed! status: ${checkResponse.status}`);
+    }
+    const checkData = await checkResponse.json();
+    if (checkData.status !== "ok") {
+      throw new Error(
+        `Server check failed! Unexpected response: ${checkData.status}`
+      );
+    }
+
+    // Proceed to generate
+    const response = await fetch("http://127.0.0.1:8000/generate", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "output.wav");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   } catch (e) {
     const snackbar = document.createElement("magenta-snackbar");
     snackbar.setAttribute("message", e);
